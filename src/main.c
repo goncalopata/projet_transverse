@@ -37,13 +37,16 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-extern uint32_t bench_speed();
+extern uint32_t bench_speed1();
+extern uint32_t bench_speed2();
+extern uint32_t bench_speed3();
+extern uint32_t bench_speed4();
 
 static void SystemClock_Config(void);
 static void Error_Handler(void);
-static unsigned long get_cycle_count();
+//static unsigned long get_cycle_count();
 
-unsigned long bench_times[] = {-1, -1, -1};
+unsigned long bench_times[] = {-1, -1, -1, -1};
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -67,8 +70,14 @@ int main(void)
    
   for (int i = 0; i < 1; i++){
 
-    int len = bench_speed();
-    bench_times[i] = len;
+    int len1 = bench_speed1();
+    bench_times[0] = len1;
+    int len2 = bench_speed2();
+    bench_times[1] = len2;
+    int len3 = bench_speed3();
+    bench_times[2] = len3;
+    int len4 = bench_speed4();
+    bench_times[3] = len4;
   }
 
   while (1) {}

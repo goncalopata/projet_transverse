@@ -16,9 +16,9 @@ sleep 1
 
 TMP=`mktemp`
 
-(echo "init; reset halt; flash write_image erase $HEX; reset run; sleep 2000"; echo "mdw 0x$ADDR_TIMES"; echo 'exit') | netcat localhost 4444 > $TMP
+(echo "init; reset halt; flash write_image erase $HEX; reset run; sleep 2000"; echo "mdw 0x$ADDR_TIMES 4"; echo 'exit') | netcat localhost 4444 > $TMP
 
-grep -a -v '>' $TMP | grep -a "$ADDR_TIMES" | cut -f 2-4 -d ' ' > $OUT
+grep -a -v '>' $TMP | grep -a "$ADDR_TIMES" | cut -f 2-5 -d ' ' > $OUT
 
 rm $TMP
 

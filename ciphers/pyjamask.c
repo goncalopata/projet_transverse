@@ -143,36 +143,47 @@ void mat_mult__V32_0 (/*inputs*/ DATATYPE vec__, /*outputs*/ DATATYPE* res__) {
 
 
 
-void MixRows__V32 (/*inputs*/ DATATYPE input__[4], DATATYPE bench__[4], /*outputs*/ DATATYPE output__[4]) {
+void MixRows__V32 (/*inputs*/ DATATYPE input__[4], /*outputs*/ DATATYPE output__[4]) {
 
   // Variables declaration
   DATATYPE M__[4];
-  
-  // Variables for benchmarking
-  uint32_t start,end;
 
   // Instructions (body)
   M__[0] = LIFT_32(2743472261);
   M__[1] = LIFT_32(1665232929);
   M__[2] = LIFT_32(1764553344);
   M__[3] = LIFT_32(1218791443);
-  mat_mult__V32_0(input__[0],&output__[0]);
-  for (int i__ = 0; i__ <= 0; i__++) {
-  start = get_cycle_count();
+  for (int i__ = 0; i__ <= 3; i__++) {
     mat_mult__V32(M__[i__],input__[i__],&output__[i__]);
-      end = get_cycle_count() - start;
-  	bench__[2] = end;
   }
-  
-  
+}
 
+void MixRows__V32_4 (/*inputs*/ DATATYPE input__[4], DATATYPE bench__[4], /*outputs*/ DATATYPE output__[4]) {
+
+  // Variables declaration
+  DATATYPE M__[4];
+  
+  // Variables benchmark
+  uint32_t start, end;
+
+  // Instructions (body)
+  M__[0] = LIFT_32(2743472261);
+  M__[1] = LIFT_32(1665232929);
+  M__[2] = LIFT_32(1764553344);
+  M__[3] = LIFT_32(1218791443);
+  start = get_cycle_count();
+  for (int i__ = 0; i__ <= 3; i__++) {
+    mat_mult__V32(M__[i__],input__[i__],&output__[i__]);
+  }
+  end = get_cycle_count() - start;
+  bench__[3] += end;
 }
 
 
 
 
 /* main function */
-void pyjamask__ (/*inputs*/ DATATYPE plaintext__[4],DATATYPE key__[15][4], DATATYPE bench__[4], /*outputs*/ DATATYPE ciphertext__[4]) {
+void pyjamask__1 (/*inputs*/ DATATYPE plaintext__[4],DATATYPE key__[15][4], DATATYPE bench__[4], /*outputs*/ DATATYPE ciphertext__[4]) {
 
   // Variables declaration
   DATATYPE _tmp11_[4];
@@ -188,28 +199,136 @@ void pyjamask__ (/*inputs*/ DATATYPE plaintext__[4],DATATYPE key__[15][4], DATAT
   round__[2] = plaintext__[2];
   round__[3] = plaintext__[3];
   for (int i__ = 0; i__ <= 13; i__++) {
-    //start = get_cycle_count();
+    start = get_cycle_count();
     AddRoundKey__V32(round__,key__[i__],_tmp11_);
-    //end = get_cycle_count() - start;
-    //bench__[0] += end;
-    //start = get_cycle_count();
+    end = get_cycle_count() - start;
+    bench__[0] += end;
+    start = get_cycle_count();
     SubBytes__V32(_tmp11_[0],_tmp11_[1],_tmp11_[2],_tmp11_[3],_tmp12_);
-    //end = get_cycle_count() - start;
-    //bench__[1] += end;
-    //start = get_cycle_count();
-    MixRows__V32(_tmp12_, bench__, round__);
-    //end = get_cycle_count() - start;
-    //bench__[2] += end;
+    end = get_cycle_count() - start;
+    bench__[1] += end;
+    start = get_cycle_count();
+    MixRows__V32(_tmp12_, round__);
+    end = get_cycle_count() - start;
+    bench__[2] += end;
   }
-  //start = get_cycle_count();
+  start = get_cycle_count();
   AddRoundKey__V32(round__,key__[14],ciphertext__);
-  //end = get_cycle_count() - start;
-  //bench__[0] += end;
+  end = get_cycle_count() - start;
+  bench__[0] += end;
+
+}
+
+void pyjamask__2 (/*inputs*/ DATATYPE plaintext__[4],DATATYPE key__[15][4], DATATYPE bench__[4], /*outputs*/ DATATYPE ciphertext__[4]) {
+
+  // Variables declaration
+  DATATYPE _tmp11_[4];
+  DATATYPE _tmp12_[4];
+  DATATYPE round__[4];
+
+  // Variables for benchmarking
+  uint32_t start,end;
+
+  // Instructions (body)
+  round__[0] = plaintext__[0];
+  round__[1] = plaintext__[1];
+  round__[2] = plaintext__[2];
+  round__[3] = plaintext__[3];
+  for (int i__ = 0; i__ <= 13; i__++) {
+    start = get_cycle_count();
+    AddRoundKey__V32(round__,key__[i__],_tmp11_);
+    end = get_cycle_count() - start;
+    bench__[0] += end;
+    start = get_cycle_count();
+    SubBytes__V32(_tmp11_[0],_tmp11_[1],_tmp11_[2],_tmp11_[3],_tmp12_);
+    end = get_cycle_count() - start;
+    bench__[1] += end;
+    start = get_cycle_count();
+    MixRows__V32(_tmp12_, round__);
+    end = get_cycle_count() - start;
+    bench__[2] += end;
+  }
+  start = get_cycle_count();
+  AddRoundKey__V32(round__,key__[14],ciphertext__);
+  end = get_cycle_count() - start;
+  bench__[0] += end;
+
+}
+
+void pyjamask__3 (/*inputs*/ DATATYPE plaintext__[4],DATATYPE key__[15][4], DATATYPE bench__[4], /*outputs*/ DATATYPE ciphertext__[4]) {
+
+  // Variables declaration
+  DATATYPE _tmp11_[4];
+  DATATYPE _tmp12_[4];
+  DATATYPE round__[4];
+
+  // Variables for benchmarking
+  uint32_t start,end;
+
+  // Instructions (body)
+  round__[0] = plaintext__[0];
+  round__[1] = plaintext__[1];
+  round__[2] = plaintext__[2];
+  round__[3] = plaintext__[3];
+  for (int i__ = 0; i__ <= 13; i__++) {
+    start = get_cycle_count();
+    AddRoundKey__V32(round__,key__[i__],_tmp11_);
+    end = get_cycle_count() - start;
+    bench__[0] += end;
+    start = get_cycle_count();
+    SubBytes__V32(_tmp11_[0],_tmp11_[1],_tmp11_[2],_tmp11_[3],_tmp12_);
+    end = get_cycle_count() - start;
+    bench__[1] += end;
+    start = get_cycle_count();
+    MixRows__V32(_tmp12_, round__);
+    end = get_cycle_count() - start;
+    bench__[2] += end;
+  }
+  start = get_cycle_count();
+  AddRoundKey__V32(round__,key__[14],ciphertext__);
+  end = get_cycle_count() - start;
+  bench__[0] += end;
+
+}
+
+void pyjamask__4 (/*inputs*/ DATATYPE plaintext__[4],DATATYPE key__[15][4], DATATYPE bench__[4], /*outputs*/ DATATYPE ciphertext__[4]) {
+
+  // Variables declaration
+  DATATYPE _tmp11_[4];
+  DATATYPE _tmp12_[4];
+  DATATYPE round__[4];
+
+  // Variables for benchmarking
+  uint32_t start,end;
+
+  // Instructions (body)
+  round__[0] = plaintext__[0];
+  round__[1] = plaintext__[1];
+  round__[2] = plaintext__[2];
+  round__[3] = plaintext__[3];
+  for (int i__ = 0; i__ <= 13; i__++) {
+    start = get_cycle_count();
+    AddRoundKey__V32(round__,key__[i__],_tmp11_);
+    end = get_cycle_count() - start;
+    bench__[0] += end;
+    start = get_cycle_count();
+    SubBytes__V32(_tmp11_[0],_tmp11_[1],_tmp11_[2],_tmp11_[3],_tmp12_);
+    end = get_cycle_count() - start;
+    bench__[1] += end;
+    start = get_cycle_count();
+    MixRows__V32_4(_tmp12_, bench__, round__);
+    end = get_cycle_count() - start;
+    bench__[2] += end;
+  }
+  start = get_cycle_count();
+  AddRoundKey__V32(round__,key__[14], ciphertext__);
+  end = get_cycle_count() - start;
+  bench__[0] += end;
 
 }
 
 /* Additional functions */
-uint32_t bench_speed() {
+uint32_t bench_speed1() {
   /* inputs */
   DATATYPE plaintext__[4] = { 0 };
   DATATYPE key__[15][4] = { 0 };
@@ -218,11 +337,56 @@ uint32_t bench_speed() {
   /* outputs */
   DATATYPE ciphertext__[4] = { 0 };
   /* fun call */
-  pyjamask__(plaintext__, key__, bench__,ciphertext__);
+  pyjamask__1(plaintext__, key__, bench__,ciphertext__);
+
+  /* Returning the number of encrypted bytes */
+  return bench__[0];
+}
+
+uint32_t bench_speed2() {
+  /* inputs */
+  DATATYPE plaintext__[4] = { 0 };
+  DATATYPE key__[15][4] = { 0 };
+  /* benchmark*/
+  DATATYPE bench__[4] = {0,0,0,0};
+  /* outputs */
+  DATATYPE ciphertext__[4] = { 0 };
+  /* fun call */
+  pyjamask__2(plaintext__, key__, bench__,ciphertext__);
+
+  /* Returning the number of encrypted bytes */
+  return bench__[1];
+}
+
+uint32_t bench_speed3() {
+  /* inputs */
+  DATATYPE plaintext__[4] = { 0 };
+  DATATYPE key__[15][4] = { 0 };
+  /* benchmark*/
+  DATATYPE bench__[4] = {0,0,0,0};
+  /* outputs */
+  DATATYPE ciphertext__[4] = { 0 };
+  /* fun call */
+  pyjamask__3(plaintext__, key__, bench__,ciphertext__);
 
   /* Returning the number of encrypted bytes */
   return bench__[2];
 }
+
+uint32_t bench_speed4() {
+  /* inputs */
+  DATATYPE plaintext__[4] = { 0 };
+  DATATYPE key__[15][4] = { 0 };
+  /* benchmark*/
+  DATATYPE bench__[4] = {0,0,0,0};
+  /* outputs */
+  DATATYPE ciphertext__[4] = { 0 };
+  /* fun call */
+  pyjamask__4(plaintext__, key__, bench__,ciphertext__);
+
+  /* Returning the number of encrypted bytes */
+  return bench__[3];
+ }
 
 /* **************************************************************** */
 /*                            Usuba source                          */
