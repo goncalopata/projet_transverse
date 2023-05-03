@@ -3,8 +3,6 @@
    From the file "nist/pyjamask/usuba/ua/pyjamask_vslice.ua" (included below). */
 
 #include <stdint.h>
-#include <time.h>
-#include "main.h"
 
 /* Do NOT change the order of those define/include */
 
@@ -13,40 +11,6 @@
 #endif
 /* including the architecture specific .h */
 #include "STD.h"
-
-/* auxiliary function for benchmarking */
-
-unsigned long get_cycle_count()
-{
-   /* retrieve the CPU cycles using the Cortex-M DWT->CYCCNT register
-    * avaialable only starting from CM3
-    */
-
-#if (__CORTEX_M >= 0x03U)
-    static int dwt_started = 0;
-    if( dwt_started == 0 )
-    {
-      dwt_started = 1;
-      /* Enable Tracing */
-        CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-#if (__CORTEX_M == 0x07U)
-        /* in Cortex M7, the trace needs to be unlocked
-         * via the DWT->LAR register with 0xC5ACCE55 value
-         */
-        DWT->LAR = 0xC5ACCE55;
-#endif
-        DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-
-      /* Reset counter */
-      DWT->CYCCNT = 0;
-    }
-
-    return (unsigned long)DWT->CYCCNT;
-#else
-    return 0;
-#endif
-}
-
 
 /* auxiliary functions */
 void SubBytes__V32 (/*inputs*/ DATATYPE s0,DATATYPE s1,DATATYPE s2,DATATYPE s3, /*outputs*/ DATATYPE ret[4]) {
@@ -123,64 +87,118 @@ void mat_mult__V32 (/*inputs*/ DATATYPE col__,DATATYPE vec__, /*outputs*/ DATATY
 
 void mat_mult__V32_0 (/*inputs*/ DATATYPE vec__, /*outputs*/ DATATYPE* res__) {
 
-	// Variables declaration
-	DATATYPE mat_col__;
-	DATATYPE res_tmp__;
-	DATATYPE _tmp7_;
-	DATATYPE _tmp_col_;
-	
-	//Instructions (body)
-	mat_col__ = LIFT_32(2743472261);
-	res_tmp__ = LIFT_32(0);
-	_tmp_col_ = L_ROTATE(mat_col__,31,32);
-	for(int i__ = 0; i__ < 32; i__ ++) {
-		_tmp7_ = AND(__builtin_popcount(_tmp_col_ * vec__), 1);
-		res_tmp__ = ADD(L_SHIFT(_tmp7_,i__,32), res_tmp__, 32);
-		_tmp_col_ = L_ROTATE(_tmp_col_,1,32);
-	}
-	*res__ = res_tmp__;
-}
-
-
-
-void MixRows__V32 (/*inputs*/ DATATYPE input__[4], DATATYPE bench__[4], /*outputs*/ DATATYPE output__[4]) {
-
   // Variables declaration
-  DATATYPE M__[4];
-  
-  // Variables for benchmarking
-  uint32_t start,end;
+  DATATYPE _tmp5_;
+  DATATYPE _tmp6_;
+  DATATYPE mask__;
+  DATATYPE mat_col__;
+  DATATYPE res_tmp__;
 
   // Instructions (body)
-  M__[0] = LIFT_32(2743472261);
-  M__[1] = LIFT_32(1665232929);
-  M__[2] = LIFT_32(1764553344);
-  M__[3] = LIFT_32(1218791443);
-  mat_mult__V32_0(input__[0],&output__[0]);
-  for (int i__ = 0; i__ <= 0; i__++) {
-  start = get_cycle_count();
-    mat_mult__V32(M__[i__],input__[i__],&output__[i__]);
-      end = get_cycle_count() - start;
-  	bench__[2] = end;
+  mat_col__ = LIFT_32(2743472261);
+  res_tmp__ = LIFT_32(0);
+  for (int i__ = 0; i__ <= 31; i__++) {
+    _tmp5_ = L_SHIFT(vec__,i__,32);
+    mask__ = RA_SHIFT(_tmp5_,31,32);
+    _tmp6_ = AND(mask__,mat_col__);
+    res_tmp__ = XOR(res_tmp__,_tmp6_);
+    mat_col__ = R_ROTATE(mat_col__,1,32);
   }
-  
-  
+  *res__ = res_tmp__;
+
+}
+void mat_mult__V32_1 (/*inputs*/ DATATYPE vec__, /*outputs*/ DATATYPE* res__) {
+
+  // Variables declaration
+  DATATYPE _tmp5_;
+  DATATYPE _tmp6_;
+  DATATYPE mask__;
+  DATATYPE mat_col__;
+  DATATYPE res_tmp__;
+
+  // Instructions (body)
+  mat_col__ = LIFT_32(1665232929);
+  res_tmp__ = LIFT_32(0);
+  for (int i__ = 0; i__ <= 31; i__++) {
+    _tmp5_ = L_SHIFT(vec__,i__,32);
+    mask__ = RA_SHIFT(_tmp5_,31,32);
+    _tmp6_ = AND(mask__,mat_col__);
+    res_tmp__ = XOR(res_tmp__,_tmp6_);
+    mat_col__ = R_ROTATE(mat_col__,1,32);
+  }
+  *res__ = res_tmp__;
+
+}
+void mat_mult__V32_2 (/*inputs*/ DATATYPE vec__, /*outputs*/ DATATYPE* res__) {
+
+  // Variables declaration
+  DATATYPE _tmp5_;
+  DATATYPE _tmp6_;
+  DATATYPE mask__;
+  DATATYPE mat_col__;
+  DATATYPE res_tmp__;
+
+  // Instructions (body)
+  mat_col__ = LIFT_32(1764553344);
+  res_tmp__ = LIFT_32(0);
+  for (int i__ = 0; i__ <= 31; i__++) {
+    _tmp5_ = L_SHIFT(vec__,i__,32);
+    mask__ = RA_SHIFT(_tmp5_,31,32);
+    _tmp6_ = AND(mask__,mat_col__);
+    res_tmp__ = XOR(res_tmp__,_tmp6_);
+    mat_col__ = R_ROTATE(mat_col__,1,32);
+  }
+  *res__ = res_tmp__;
+
+}
+void mat_mult__V32_3 (/*inputs*/ DATATYPE vec__, /*outputs*/ DATATYPE* res__) {
+
+  // Variables declaration
+  DATATYPE _tmp5_;
+  DATATYPE _tmp6_;
+  DATATYPE mask__;
+  DATATYPE mat_col__;
+  DATATYPE res_tmp__;
+
+  // Instructions (body)
+  mat_col__ = LIFT_32(1218791443);
+  res_tmp__ = LIFT_32(0);
+  for (int i__ = 0; i__ <= 31; i__++) {
+    _tmp5_ = L_SHIFT(vec__,i__,32);
+    mask__ = RA_SHIFT(_tmp5_,31,32);
+    _tmp6_ = AND(mask__,mat_col__);
+    res_tmp__ = XOR(res_tmp__,_tmp6_);
+    mat_col__ = R_ROTATE(mat_col__,1,32);
+  }
+  *res__ = res_tmp__;
 
 }
 
 
+void MixRows__V32 (/*inputs*/ DATATYPE input__[4], /*outputs*/ DATATYPE output__[4]) {
 
+  // Variables declaration
+  //DATATYPE M__[4];
+
+  // Instructions (body)
+  //M__[0] = LIFT_32(2743472261);
+  //M__[1] = LIFT_32(1665232929);
+  //M__[2] = LIFT_32(1764553344);
+  //M__[3] = LIFT_32(1218791443);
+  mat_mult__V32_0(input__[0],&output__[0]);
+  mat_mult__V32_1(input__[1],&output__[1]);
+  mat_mult__V32_2(input__[2],&output__[2]);
+  mat_mult__V32_3(input__[3],&output__[3]);
+
+}
 
 /* main function */
-void pyjamask__ (/*inputs*/ DATATYPE plaintext__[4],DATATYPE key__[15][4], DATATYPE bench__[4], /*outputs*/ DATATYPE ciphertext__[4]) {
+void pyjamask__ (/*inputs*/ DATATYPE plaintext__[4],DATATYPE key__[15][4], /*outputs*/ DATATYPE ciphertext__[4]) {
 
   // Variables declaration
   DATATYPE _tmp11_[4];
   DATATYPE _tmp12_[4];
   DATATYPE round__[4];
-
-  // Variables for benchmarking
-  uint32_t start,end;
 
   // Instructions (body)
   round__[0] = plaintext__[0];
@@ -188,62 +206,46 @@ void pyjamask__ (/*inputs*/ DATATYPE plaintext__[4],DATATYPE key__[15][4], DATAT
   round__[2] = plaintext__[2];
   round__[3] = plaintext__[3];
   for (int i__ = 0; i__ <= 13; i__++) {
-    //start = get_cycle_count();
     AddRoundKey__V32(round__,key__[i__],_tmp11_);
-    //end = get_cycle_count() - start;
-    //bench__[0] += end;
-    //start = get_cycle_count();
     SubBytes__V32(_tmp11_[0],_tmp11_[1],_tmp11_[2],_tmp11_[3],_tmp12_);
-    //end = get_cycle_count() - start;
-    //bench__[1] += end;
-    //start = get_cycle_count();
-    MixRows__V32(_tmp12_, bench__, round__);
-    //end = get_cycle_count() - start;
-    //bench__[2] += end;
+    MixRows__V32(_tmp12_,round__);
   }
-  //start = get_cycle_count();
   AddRoundKey__V32(round__,key__[14],ciphertext__);
-  //end = get_cycle_count() - start;
-  //bench__[0] += end;
 
 }
 
 /* Additional functions */
-uint32_t bench_speed() {
+uint32_t bench_speed(DATATYPE* plaintext[4], DATATYPE* ciphertext[4]) {
   /* inputs */
   DATATYPE plaintext__[4] = { 0 };
+  *plaintext = plaintext__;
   DATATYPE key__[15][4] = { 0 };
-  /* benchmark*/
-  DATATYPE bench__[4] = {0,0,0,0};
   /* outputs */
   DATATYPE ciphertext__[4] = { 0 };
   /* fun call */
-  pyjamask__(plaintext__, key__, bench__,ciphertext__);
+  pyjamask__(plaintext__, key__,ciphertext__);
+
+  *ciphertext = ciphertext__;
 
   /* Returning the number of encrypted bytes */
-  return bench__[2];
+  return 16;
 }
 
 /* **************************************************************** */
 /*                            Usuba source                          */
 /*                                                                  */
 /*
-
  table SubBytes(i :  v4 :: base)
   returns o :  v4 :: base
 {
   2, 13, 3, 9, 7, 11, 10, 6, 14, 0, 15, 4, 8, 5, 1, 12
 }
-
-
  node AddRoundKey(i :  u32x4 :: base,k :  u32x4 :: base)
   returns o :  u32x4 :: base
 vars
-
 let
   (o) = (i ^ k)
 tel
-
  node mat_mult(col :  u32 :: base,vec :  u32 :: base)
   returns res :  u32 :: base
 vars
@@ -260,7 +262,6 @@ let
   };
   (res) = res_tmp[32]
 tel
-
  node MixRows(input :  u32x4 :: base)
   returns output :  u32x4 :: base
 vars
@@ -271,7 +272,6 @@ let
     (output[i]) = mat_mult(M[i],input[i])
   }
 tel
-
  node pyjamask(plaintext :  u32x4 :: base,key :  u32x4[15] :: base)
   returns ciphertext :  u32x4 :: base
 vars
@@ -283,7 +283,5 @@ let
   };
   (ciphertext) = AddRoundKey(round[14],key[14])
 tel
-
 */
-
  
